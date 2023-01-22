@@ -1,0 +1,26 @@
+ARG goversion=1.20rc3
+
+FROM docker.io/arm32v7/golang:${goversion}-alpine as builder
+
+# QEMU static binary
+COPY qemu-arm-static /usr/bin/
+
+RUN apk update && apk add git bash file && \
+    git clone --depth 1 --branch v1.3.3 https://github.com/saphoooo/freebox_exporter && \
+    cd freebox_exporter && bash build.sh
+
+FROM docker.io/arm32v7/alpine:3.17.1
+LABEL maintainer "Lorenzo Prosseda <lerokamut@gmail.com>"
+
+COPY --from=builder /usr/bin/qemu-arm-static /usr/bin/
+COPY --from=builder /go/freebox_exporter/freebox_exporter /usr/bin/freebox-exporter
+
+# Configure system
+EXPOSE 9091
+VOLUME /config
+WORKDIR /config
+ENV HOME=/config
+
+RUN rm -rf /usr/bin/qemu-arm-static
+
+CMD freebox-exporter -endpoint http://192.168.1.254 -listen ":9091" -fiber -debug

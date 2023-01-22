@@ -1,0 +1,20 @@
+ARG goversion=1.20rc3
+
+FROM docker.io/amd64/golang:${goversion}-alpine as builder
+
+RUN apk update && apk add git bash file && \
+    git clone --depth 1 --branch v1.3.3 https://github.com/saphoooo/freebox_exporter && \
+    cd freebox_exporter && bash build.sh
+
+FROM docker.io/amd64/alpine:3.17.1
+LABEL maintainer "Lorenzo Prosseda <lerokamut@gmail.com>"
+
+COPY --from=builder /go/freebox_exporter/freebox_exporter /usr/bin/freebox-exporter
+
+# Configure system
+EXPOSE 9091
+VOLUME /config
+WORKDIR /config
+ENV HOME=/config
+
+CMD freebox-exporter -endpoint http://192.168.1.254 -listen ":9091" -fiber -debug
