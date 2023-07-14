@@ -9,7 +9,7 @@ RUN apk add git && \
 FROM docker.io/arm64v8/alpine:3.18.2
 LABEL maintainer "Lorenzo Prosseda <lerokamut@gmail.com>"
 
-COPY --from=builder /go/iliadbox-exporter/iliadbox-exporter /usr/bin/freebox-exporter
+COPY --from=builder /go/iliadbox-exporter/iliadbox-exporter /usr/bin/iliadbox-exporter
 
 # Configure system
 EXPOSE 9091
