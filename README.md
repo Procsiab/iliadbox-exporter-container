@@ -13,7 +13,7 @@ Before the application will be able to read the metrics, a token must be generat
 
 Start the container in the following way, on a machine connected to the Iliadbox's LAN:
 ```bash
-podman run --rm -it -p 9091:9091 -v $(pwd):/config:Z docker.io/procsiab/iliadbox-exporter-container
+podman run --rm -it -p 9091:9091 -v $(pwd):/config:Z docker.io/procsiab/iliadbox-exporter-container:latest
 ```
 
 After following the on screen instructions on your Iliadbox, and allowing the application named "prometheus-exporter" to *"Edit the Iliadbox Settings"* (Settings > Iliadbox Parameters > Simplified Mode > Access Management > Pencil icon > click the corresponding checkbox), you will be able to communicate with the API using this application.
@@ -25,11 +25,15 @@ At this time, a file called `auth_token.json` should have been created inside yo
 To run the application, assuming that you have already performed a successful authentication and have saved the application token, use the sdame command as above:
 
 ```bash
-podman run --rm -it -p 9091:9091 -v $(pwd):/config:Z docker.io/procsiab/iliadbox-exporter-container
+podman run --rm -it -p 9091:9091 -v $(pwd):/config:Z docker.io/procsiab/iliadbox-exporter-container:latest
 ```
 
 ### NOTE
 
 All the API calls are performed only via LAN towards the Iliadbox by default, as hardcoded inside the exporter.
 
-You can also override the default command to disable the debug logging level and the host metrics collection, by omitting the respective arguments.
+You can also override the default command to enable the debug logging level and/or disable the host metrics collection, by omitting the respective arguments:
+
+```bash
+podman run --rm -it -p 9091:9091 -v $(pwd):/config:Z docker.io/procsiab/iliadbox-exporter-container:latest iliadbox-exporter -httpDiscovery -debug auth_token.json
+```
