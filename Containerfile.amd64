@@ -1,12 +1,12 @@
-ARG goversion=1.20.6
+ARG goversion=1.21.3
 
 FROM docker.io/amd64/golang:${goversion}-alpine as builder
 
 RUN apk add git && \
-    git clone --depth 1 --branch v0.0.4 https://github.com/Procsiab/iliadbox-exporter && \
+    git clone --depth 1 --branch v0.0.5 https://github.com/Procsiab/iliadbox-exporter && \
     cd iliadbox-exporter && GOARCH="amd64" go build -ldflags "-s -w"
 
-FROM docker.io/amd64/alpine:3.18.2
+FROM docker.io/amd64/alpine:3.18.4
 LABEL maintainer "Lorenzo Prosseda <lerokamut@gmail.com>"
 
 COPY --from=builder /go/iliadbox-exporter/iliadbox-exporter /usr/bin/iliadbox-exporter
