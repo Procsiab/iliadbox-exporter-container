@@ -1,9 +1,9 @@
-ARG goversion=1.21.8
+ARG goversion=1.23.6
 
 FROM docker.io/arm32v7/golang:${goversion}-alpine as builder
 
 RUN apk add git && \
-    git clone --depth 1 --branch v0.0.5 https://github.com/Procsiab/iliadbox-exporter && \
+    git clone --depth 1 --branch v0.0.6 https://github.com/Procsiab/iliadbox-exporter && \
     cd iliadbox-exporter && GOARCH="arm" go build -ldflags "-s -w"
 
 FROM docker.io/arm32v7/alpine:3.19.1
